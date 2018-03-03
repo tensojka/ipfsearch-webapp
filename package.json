@@ -1,0 +1,19 @@
+{
+    "name": "ipfsearch-webapp",
+    "version": "1.0.0",
+    "description": "Webapp for indexedsearch-ipfs",
+    "scripts": {},
+    "bugs": {
+        "email": "ondrej.sojka+npm@gmail.com"
+    },
+    "author": {
+        "name": "Ondrej Sojka",
+        "email": "ondrej.sojka+npm@gmail.com"
+    },
+    "license": "AGPL-3.0+",
+    "dependencies": {},
+    "devDependencies": {
+        "typescript": "^2.7.2",
+        "@types/node": "^9.4.6"
+    }
+}
