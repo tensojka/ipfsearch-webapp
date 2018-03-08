@@ -27,30 +27,31 @@ function tokenizeAndFilter(name : string) : string[]{
  * 
  * @param url location of the index of documents
  */
-function loadIndexFromURL(url : string) : Promise<Map<string,Object>>{
-    return fetch(url).then((response) => {
-        if(response.ok){
-            return response.text()
-        }
-    }).then((response) => {
-        console.debug("parsing index from "+url)
-        let parsedResponse : Object[] = JSON.parse(response)
-        let parsedIndex : Map<string,Object>
-        parsedIndex = new Map()
-        for(let object of parsedResponse){
-            let id = ""
-            let document = new Object()
-            for(let property of Object.keys(object)){
-                if(property === "id"){
-                    id = object[property]
-                }else{
-                    document[property] = object[property]
-                }
+async function loadIndexFromURL(url : string) : Promise<Map<string,Object>>{
+    let response = await fetch(url)
+    let responsetext : string
+    if(response.ok){
+        responsetext = await response.text()
+    }else{
+        throw new Error(response.statusText);
+    }
+    console.debug("parsing index from "+url)
+    let parsedResponse : Object[] = JSON.parse(responsetext)
+    let parsedIndex : Map<string,Object>
+    parsedIndex = new Map()
+    for(let object of parsedResponse){
+        let id = ""
+        let document = new Object()
+        for(let property of Object.keys(object)){
+            if(property === "id"){
+                id = object[property]
+            }else{
+                document[property] = object[property]
             }
-            parsedIndex.set(id,document)
         }
-        return parsedIndex
-    })
+        parsedIndex.set(id,document)
+    }
+    return parsedIndex
 }
 
 /**
@@ -93,10 +94,14 @@ function loadInvertedIndexFromURL(url : string) : Promise<Map<string,Array<strin
 }
 
 async function getDocumentForId(docid : string) : Promise<Object>{
-    await inxFetcher.fetchShard(inxFetcher.getIndexFor(docid)) //aaah geil promises promises promises
-    if(inxFetcher.combinedIndex.get(docid) === undefined) console.error("No document found for docid "+docid)
+    docid = docid.replace("%2C",",")
+    console.debug("getDocumentForId("+docid+")")
+    await inxFetcher.fetchShard(inxFetcher.getIndexFor(docid))
+    if(inxFetcher.combinedIndex.get(docid) === undefined){
+        console.error("No document found for docid "+docid)
+        return {text: "no document found", id: docid}
+    }
     let doc = inxFetcher.combinedIndex.get(docid)
-    console.debug(doc)
     doc["id"] = docid
     return inxFetcher.combinedIndex.get(docid)
 }

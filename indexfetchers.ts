@@ -9,28 +9,27 @@ class IndexFetcher {
     /**
      * Fetch shard and incorporate it into the index.
      */
-    fetchShard(shardid: number) : Promise<void>{
+    async fetchShard(shardid: number) : Promise<void>{
         if(this.shardsFetched.has(shardid)){
-            return Promise.resolve()
+            console.debug("not needing to fetch shard "+shardid)
+            return
         }
-        console.debug("started fetching shard " + shardid)
+        console.debug("started fetching inx shard " + shardid)
         this.shardsFetched.set(shardid, false)
-        return loadIndexFromURL(meta.inxURLBase + shardid.toString())
-        .then(function(shard : Map<string,string[]>){        
-            for(let i of shard.keys()){
-                if(!inxFetcher.combinedIndex.has(i)){
-                    inxFetcher.combinedIndex.set(i, shard.get(i))
-                }else{
-                    //console.debug("this is weird, we fetched a token twice.")
-                    //This is not weird if you're on firefox, bc there, the first key of a set is always an empty string.
-                    if(i != ""){
-                        console.warn("srsly weird")
-                    }
+        let shard = await loadIndexFromURL(meta.inxURLBase + shardid.toString())    
+        for(let i of shard.keys()){
+            if(!inxFetcher.combinedIndex.has(i)){
+                inxFetcher.combinedIndex.set(i, shard.get(i))
+            }else{
+                //console.debug("this is weird, we fetched a token twice.")
+                //This is not weird if you're on firefox, bc there, the first key of a set is always an empty string.
+                if(i != ""){
+                    console.warn("srsly weird")
                 }
             }
-            console.debug("shard " + shardid + " fetched!")
-            inxFetcher.shardsFetched.set(shardid, true)
-        })
+        }
+        console.debug("shard " + shardid + " fetched!")
+        inxFetcher.shardsFetched.set(shardid, true)
     }
 
     /**
@@ -53,28 +52,26 @@ class InvertedIndexFetcher extends IndexFetcher {
     /**
      * Fetch shard and incorporate it into the index.
      */
-    fetchShard(shardid: number) : Promise<void>{
+    async fetchShard(shardid: number) : Promise<void>{
         if(this.shardsFetched.has(shardid)){
-            return Promise.resolve()
+            return
         }
-        console.log("started fetching shard " + shardid)
+        console.debug("started fetching invinx shard " + shardid)
         this.shardsFetched.set(shardid, false)
-        return loadInvertedIndexFromURL(meta.invURLBase + shardid.toString())
-        .then(function(shard){        
-            for(let i of shard.keys()){
-                if(!invinxFetcher.combinedIndex.has(i)){
-                    invinxFetcher.combinedIndex.set(i, shard.get(i))
-                }else{
-                    //console.debug("this is weird, we fetched a token twice.")
-                    //This is not weird if you're on firefox, bc there, the first key of a set is always an empty string.
-                    if(i != ""){
-                        console.warn("srsly weird")
-                    }
+        let shard = await loadInvertedIndexFromURL(meta.invURLBase + shardid.toString())      
+        for(let i of shard.keys()){
+            if(!invinxFetcher.combinedIndex.has(i)){
+                invinxFetcher.combinedIndex.set(i, shard.get(i))
+            }else{
+                //console.debug("this is weird, we fetched a token twice.")
+                //This is not weird if you're on firefox, bc there, the first key of a set is always an empty string.
+                if(i != ""){
+                    console.warn("srsly weird")
                 }
             }
-            console.debug("invinx shard " + shardid + " fetched!")
-            invinxFetcher.shardsFetched.set(shardid, true)
-        })
+        }
+        console.debug("invinx shard " + shardid + " fetched!")
+        invinxFetcher.shardsFetched.set(shardid, true)
     }
 
     /**
