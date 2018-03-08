@@ -1,15 +1,29 @@
 <head>
     <meta charset="utf-8">
-    <script src="bundle.js"></script>
 </head>
 
 <body>
     <h1>ipfsearch</h1>
-    <input type="text" id="meta"></input><button onclick="loadMetaFromButton()">Load index metadata</button><br>
 
-    <input type='text' placeholder="search" id="searchbox"></input>
-    <input type="submit" onclick="searchTriggered()" value="Start search" />
-    <div id="appcontainer">
-
+    <div id="app">
+        <div v-if="metaNotFetched">
+            <input type="text" id="meta"></input><button onclick="loadMetaFromButton()">Load index metadata</button>
+        </div>
+        <span v-else>
+            <p></p>Loaded <i>"{{indexName}}"</i>, compiled by <i>"{{indexAuthor}}"</i></p>
+            <input type='text' placeholder="search" id="searchbox"></input><button type="submit" onclick="searchTriggered()">Start search</button>
+        </span>
+        <table v-if="resultsFound">
+            <tr>
+                <th v-for="(value,key) in results[0]">{{key}}</th>
+            </tr>
+            <tr v-for="result in results">
+                <td v-for="(value) in result">{{value}}</td>
+            </tr>
+        </table>
     </div>
+
+<script src="bundle.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+<script src="view.js"></script>
 </body>

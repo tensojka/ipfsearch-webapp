@@ -2,7 +2,10 @@
     "name": "ipfsearch-webapp",
     "version": "1.0.0",
     "description": "Webapp for indexedsearch-ipfs",
-    "scripts": {},
+    "scripts": {
+        "watch":"node_modules/typescript/bin/tsc -p tsconfig.json",
+        "start":"http-server --cors"
+    },
     "bugs": {
         "email": "ondrej.sojka+npm@gmail.com"
     },

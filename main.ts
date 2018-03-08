@@ -1,12 +1,16 @@
 var inxFetcher = new IndexFetcher()
 var invinxFetcher = new InvertedIndexFetcher()
 var meta : metaFormat
+var app
 
 async function loadMeta(metaURL){
     const response = await fetch(metaURL) //Isn't this LOVELY?
     const json = await response.text()
     meta = JSON.parse(json)
     console.log("meta successfully fetched.")
+    app.metaNotFetched = false
+    app.indexAuthor = meta.author
+    app.indexName = meta.name
 }
 function loadMetaFromButton(){
     let metainputbox = <HTMLInputElement>document.getElementById("meta")
@@ -64,8 +68,8 @@ function searchFor(query : string){
         Promise.all(runningDocumentFetches).then((results : Array<Object>) => {
             let tDocFetchEnd = performance.now()
             console.log("Index fetching and parsing and final result generation took " + Math.round(tDocFetchEnd - tDocFetchStart) + " ms.")
-            toRender.results = results
-            render(toRender)
+            app.resultsFound = true
+            app.results = results
         })
     })
 }
