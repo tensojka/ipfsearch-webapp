@@ -1,17 +1,69 @@
 var inxFetcher = new IndexFetcher()
 var invinxFetcher = new InvertedIndexFetcher()
 var meta : metaFormat
-var app
+var app : any
+let ipfsGatewayURL : string
 
-async function loadMeta(metaURL){
-    const response = await fetch(metaURL) //Isn't this LOVELY?
+async function loadMeta(metaURL : string){
+    let response
+    if(metaURL.startsWith("/ipfs/") || metaURL.startsWith("/ipns/")){
+        response = await fetch((await getIpfsGatewayUrlPrefix()) + metaURL)
+    }else{
+        response = await fetch(metaURL) //Isn't this LOVELY?
+    }
     const json = await response.text()
     meta = JSON.parse(json)
+    if(meta.invURLBase.startsWith("/ipfs/") || meta.invURLBase.startsWith("/ipns/")){
+        meta.invURLBase = (await getIpfsGatewayUrlPrefix()) + meta.invURLBase
+    }
+    if(meta.inxURLBase.startsWith("/ipfs/") || meta.inxURLBase.startsWith("/ipns/")){
+        meta.inxURLBase = (await getIpfsGatewayUrlPrefix()) + meta.inxURLBase
+    }
+
     console.log("meta successfully fetched.")
-    app.metaNotFetched = false
+    app.showmeta = false
+    app.showsearchbox = true
     app.indexAuthor = meta.author
     app.indexName = meta.name
 }
+
+/** 
+ * Returns the IPFS gateway. If there is no set, tries to use localhost, otherwise prompts the user to install one on localhost.
+ * 
+ * If it fails to get one, it aborts the whole page by using document.write and prompting the user to install an IPFS daemon on localhost.
+ * 
+ * Return format is http://ipfsgateway.tld(:port)
+ * note the absence of a trailing slash.
+*/
+async function getIpfsGatewayUrlPrefix() : Promise<string>{
+    if(ipfsGatewayURL !== undefined){
+        return ipfsGatewayURL
+    }
+    if(await checkIfIpfsGateway("http://localhost:8080")){
+        ipfsGatewayURL = "http://localhost:8080"
+    }else if(await checkIfIpfsGateway("http://"+window.location.host)){
+        ipfsGatewayURL = "http://"+window.location.host
+    }else{
+        document.write("Loading of the index requires access to the IPFS network. We have found no running IPFS daemon on localhost. Please install IPFS from <a href='http://ipfs.io/docs/install'>ipfs.io</a> and refresh this page.")
+        throw new Error("Couldn't get a IPFS gateway. Aborting, writing instructions to document.write()")
+    }
+
+    return ipfsGatewayURL
+}
+
+/**
+ * Checks if a given endpoint is a valid IPFS gateway by fetching a "hello world" file over IPFS.
+ * @param gatewayURL in format http://ipfsgateway.tld(:port)
+ */
+async function checkIfIpfsGateway(gatewayURL : string) : Promise<boolean>{
+    let response = await fetch(gatewayURL + "/ipfs/QmT78zSuBmuS4z925WZfrqQ1qHaJ56DQaTfyMUF7F8ff5o")
+    if((await response.text()).startsWith("hello world")){ //had to use startsWith bc \n on the end of the file
+        return true
+    }else{
+        return false
+    }
+}
+
 function loadMetaFromButton(){
     let metainputbox = <HTMLInputElement>document.getElementById("meta")
     loadMeta(metainputbox.value)

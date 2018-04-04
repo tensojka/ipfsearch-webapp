@@ -1,7 +1,8 @@
 app = new Vue({
     el: '#app',
     data: {
-        metaNotFetched: true,
+        showmeta: true, //can be meta, searchbox, ipfsgateway
+        showsearchbox: false,
         message: 'Hello Vue!',
         results: undefined,
         resultsFound: false
