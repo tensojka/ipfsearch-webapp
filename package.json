@@ -3,8 +3,9 @@
     "version": "1.0.0",
     "description": "Webapp for indexedsearch-ipfs",
     "scripts": {
-        "watch":"node_modules/typescript/bin/tsc -p tsconfig.json",
-        "start":"http-server --cors"
+        "build":"node_modules/typescript/bin/tsc -p tsconfig.json",
+        "server":"http-server --cors",
+        "deploy":"bash ./deploy-to-ipfs.sh"
     },
     "bugs": {
         "email": "ondrej.sojka+npm@gmail.com"
