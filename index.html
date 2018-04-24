@@ -1,12 +1,23 @@
 <head>
     <meta charset="utf-8">
+    <style>
+        body {
+            max-width: 50em;
+            margin: auto;
+            padding: 1em;
+            line-height: 1.5em;
+            font-family: sans-serif;
+            /*  */
+        }
+    </style>
 </head>
 
 <body>
-    <h1>ipfsearch</h1>
+    <h1>ipfsearch<sup>alpha</sup></h1>
 
     <div id="app">
         <div v-if="showmeta">
+            <p>Start by entering a link to an index in the box below.</p>
             <input type="text" size="50" id="meta" placeholder="starts with http://, /ipfs/ or /ipns/"></input><button onclick="loadMetaFromButton()">Load index metadata</button>
         </div>
         <span v-else-if="showsearchbox">
@@ -23,6 +34,32 @@
             </tr>
         </table>
     </div>
+    <br>
+    <hr>
+    <h2>About</h2>
+
+    <h3>What does ipfsearch do?</h3>
+    <p>You can search through indexes that do not live on one server (are decentralized). <i>This is required on <a href="https://ipfs.io/">IPFS</a>, because there is no one server.</i> The searching and sorting is happening in your browser.</p>
+
+    <h3>What indexes can I search through?</h3>
+    <p>Right now only abstracts of Wikipedia articles: <code>/ipns/Qmdy6hkJWgsx4RQatotn48x1j57M3thSMSoKQQG6BpGPsa</code></p>
+    <p>If you want to create your own index, the instructions on how to do it are <a href="https://github.com/hoschiCZ/ipfsearch-index/">here</a>.</p>
+
+    <h3>What advantages does it have over searching on the web?</h3>
+    <p>Since there is no one server, there is also no one server that could be taken down. <b>It is impossible to take down an index after it is uploaded to IPFS.</b></p>
+
+    <h3>How does it work?</h3>
+    <p>Traditionally, when you search for something on the web, you send your query to a server. The server then (basically) takes your query, looks up the relevant documents in its index, ranks the results and sends the results back to you. This is how search works on Wikipedia, DuckDuckGo or Google.</p>
+
+    <p>With IPFS, it is impossible to send your query to a server, because there is no single server. With ipfsearch, your browser first downloads a document that tells it, where it can find what part of the index. Then, it downloads the required parts of the index from IPFS and <i>does the lookup and ranking itself.</i></p>
+
+    <h3>Why is it so slow?</h3>
+    <p>Most of the delay is caused by IPFS's DHT being slow. The performance of ipfsearch is expected to rapidly improve once the <a href="https://github.com/ipfs/go-ipfs/issues/1396">IPFS DHT</a> gets <a href="https://github.com/libp2p/go-libp2p-kad-dht/issues/88">faster</a>.</p>
+
+    <h2>Source and license</h2>
+    <p>You can find the source code of this at <a href="https://github.com/hoschiCZ/ipfsearch-webapp">Github</a>. Issues and PRs are welcome there.</p>
+    <p>The web part of ipfsearch is licensed under the GNU Affero GPL 3.</p>
+
 
 <script src="bundle.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
