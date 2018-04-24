@@ -71,7 +71,12 @@ function loadMetaFromButton(){
 
 function searchTriggered(){
     let searchbox = <HTMLInputElement>document.getElementById("searchbox")
-    searchFor(searchbox.value)
+    let querytokens = searchbox.value.split(" ")
+    querytokens = querytokens.map(querytoken => {
+        return stemmer(querytoken)
+    });
+    console.debug("searching for: "+querytokens.join(" "))
+    searchFor(querytokens.join(" "))
 }
 
 function searchFor(query : string){
@@ -88,6 +93,7 @@ function searchFor(query : string){
         var tCandidatesGenerated = performance.now();
         console.log("Candidate generation took " + Math.round(tCandidatesGenerated - tFetchEnd) + " ms.")
         console.log("candidates prefilter: "+candidates.size)
+        console.debug(candidates)
         candidates = filterCandidates(candidates, tokenizedquery.length)
         console.log("candidates postfilter: "+candidates.size)
         let resultIds : Array<string>
@@ -140,7 +146,7 @@ function filterCandidates(candidates: Map<string, number>, tokensInQuery : numbe
         let filteredCandidates: Map<string, number>
         filteredCandidates = new Map()
         for(let key of candidates.keys()){
-            if(candidates.get(key) > 1){
+            if(candidates.get(key) >= tokensInQuery){
                 filteredCandidates.set(key,candidates.get(key))
             }
         }
