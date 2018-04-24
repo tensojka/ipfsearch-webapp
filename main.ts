@@ -142,7 +142,7 @@ function searchFor(query : string){
  * For higher recall, this should not be used.
  */
 function filterCandidates(candidates: Map<string, number>, tokensInQuery : number) : Map<string,number>{
-    if(tokensInQuery >= 2){
+    /*if(tokensInQuery >= 2){
         let filteredCandidates: Map<string, number>
         filteredCandidates = new Map()
         for(let key of candidates.keys()){
@@ -154,7 +154,8 @@ function filterCandidates(candidates: Map<string, number>, tokensInQuery : numbe
         return filteredCandidates
     }else{
         return candidates
-    }
+    }*/
+    return candidates
     //TODO
 }
 
