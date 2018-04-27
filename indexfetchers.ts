@@ -54,6 +54,9 @@ class IndexFetcher {
 }
 
 class InvertedIndexFetcher extends IndexFetcher {
+
+    combinedInvIndex : Map<string, string[]> = new Map()
+
     /**
      * Fetch shard and incorporate it into the index.
      */
@@ -65,8 +68,8 @@ class InvertedIndexFetcher extends IndexFetcher {
         this.shardsFetched.set(shardid, false)
         let shard = await loadInvertedIndexFromURL(meta.invURLBase + shardid.toString())      
         for(let i of shard.keys()){
-            if(!invinxFetcher.combinedIndex.has(i)){
-                invinxFetcher.combinedIndex.set(i, shard.get(i))
+            if(!invinxFetcher.combinedInvIndex.has(i)){
+                invinxFetcher.combinedInvIndex.set(i, shard.get(i))
             }else{
                 //console.debug("this is weird, we fetched a token twice.")
                 //This is not weird if you're on firefox, bc there, the first key of a set is always an empty string.

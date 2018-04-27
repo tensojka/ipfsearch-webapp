@@ -89,7 +89,7 @@ function searchFor(query : string){
     Promise.all(runningFetches).then(() => {
         var tFetchEnd = performance.now();
         console.log("Fetching new shards for this query took " + Math.round(tFetchEnd - tStart) + " ms.")
-        let candidates = getAllCandidates(tokenizedquery, invinxFetcher.combinedIndex)
+        let candidates = getAllCandidates(tokenizedquery, invinxFetcher.combinedInvIndex)
         var tCandidatesGenerated = performance.now();
         console.log("Candidate generation took " + Math.round(tCandidatesGenerated - tFetchEnd) + " ms.")
         console.log("candidates prefilter: "+candidates.size)
@@ -142,11 +142,11 @@ function searchFor(query : string){
  * For higher recall, this should not be used.
  */
 function filterCandidates(candidates: Map<string, number>, tokensInQuery : number) : Map<string,number>{
-    /*if(tokensInQuery >= 2){
+    if(tokensInQuery >= 2){
         let filteredCandidates: Map<string, number>
         filteredCandidates = new Map()
         for(let key of candidates.keys()){
-            if(candidates.get(key) >= tokensInQuery){
+            if(candidates.get(key) >= (tokensInQuery/2)){
                 filteredCandidates.set(key,candidates.get(key))
             }
         }
@@ -154,9 +154,7 @@ function filterCandidates(candidates: Map<string, number>, tokensInQuery : numbe
         return filteredCandidates
     }else{
         return candidates
-    }*/
-    return candidates
-    //TODO
+    }
 }
 
 /**
