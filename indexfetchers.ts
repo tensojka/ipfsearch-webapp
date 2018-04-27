@@ -1,5 +1,10 @@
+interface Document {
+    id : string,
+    text : string
+}
+
 class IndexFetcher {
-    combinedIndex: Map<string, Object> = new Map()
+    combinedIndex: Map<string, Document> = new Map()
     shardMap : [string]
     /**
      * key is shardid, value is true if the shard has been fetched and incorporated into the index var
@@ -19,7 +24,7 @@ class IndexFetcher {
         let shard = await loadIndexFromURL(meta.inxURLBase + shardid.toString())    
         for(let i of shard.keys()){
             if(!inxFetcher.combinedIndex.has(i)){
-                inxFetcher.combinedIndex.set(i, shard.get(i))
+                inxFetcher.combinedIndex.set(i, <Document>shard.get(i))
             }else{
                 //console.debug("this is weird, we fetched a token twice.")
                 //This is not weird if you're on firefox, bc there, the first key of a set is always an empty string.

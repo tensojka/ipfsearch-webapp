@@ -133,7 +133,7 @@ function searchFor(query : string){
 }
 
 /**
- * Filter out candidates that are not relevant enough.
+ * Filter out candidates that are not relevant enough to fetch.
  * 
  * Example: Say the user has searched for 5 terms. This filters all candidates that match less than 3 of them, if there are some that match all 5.
  * 
@@ -165,7 +165,10 @@ function filterCandidates(candidates: Map<string, number>, tokensInQuery : numbe
  * @returns a Map, mapping an infohash to the number of times the candidate appeared in the index for given query.
  */
 function getAllCandidates(query : Array<string>, index : Map<string, Object>) : Map<string, number> {
-    let candidates: Map<string, number> //maps the infohash of a candidate to the number of times it appeared in results
+    /**
+     * Maps the infohash of a candidate to the number of times it appeared in results
+     */
+    let candidates: Map<string, number>
     candidates = new Map()
     for(let i in query){
         let result = index.get(query[i])
