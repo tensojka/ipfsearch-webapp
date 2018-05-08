@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <h1>ipfsearch<sup>alpha</sup></h1>
+    <h1>ipfsearch<sup>beta</sup></h1>
 
     <div id="app">
         <div v-if="showmeta">
@@ -34,7 +34,7 @@
             </tr>
         </table>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.14/dist/vue.min.js"></script>
     <script src="view.js"></script>
     <br>
     <hr>
@@ -59,7 +59,10 @@
     <p>Most of the delay is caused by IPFSs DHT being slow. The performance of ipfsearch is expected to rapidly improve once the <a href="https://github.com/ipfs/go-ipfs/issues/1396">IPFS DHT</a> gets <a href="https://github.com/libp2p/go-libp2p-kad-dht/issues/88">faster</a>.</p>
 
     <h3>Where can I find it later?</h3>
-    <p>The newest usable version is always at <a href="http://ipfsearch.xyz">ipfsearch.xyz</a>.</p>
+    <p>The newest usable version is always at <a href="http://ipfsearch.xyz">ipfsearch.xyz</a>, or <code>/ipns/ipfsearch.xyz</code>. In case the domain doesn't work, use <code>/ipns/QmSE8g9k5JS1vJ7y5znhSZikmybvdsm3yDj7sbKjPRqsJW</code>.</p>
+    
+    <h3>How can I access this if ipfsearch.xyz is down?</h3>
+    <p>Download IPFS from <a href="https://ipfs.io/docs/install/">the official website</a>, start the daemon on your computer and dial http://localhost:8080/ipns/ipfsearch.xyz in a browser.</p>
 
     <h2>Source and license</h2>
     <p>You can find the source code of this at <a href="https://github.com/tensojka/ipfsearch-webapp">Github</a>. Issues and PRs are welcome there.</p>

@@ -56,13 +56,14 @@ async function getIpfsGatewayUrlPrefix() : Promise<string>{
  * @param gatewayURL in format http://ipfsgateway.tld(:port)
  */
 async function checkIfIpfsGateway(gatewayURL : string) : Promise<boolean>{
-    let response = await fetch(gatewayURL + "/ipfs/QmT78zSuBmuS4z925WZfrqQ1qHaJ56DQaTfyMUF7F8ff5o")
     try{
-    if((await response.text()).startsWith("hello world")){ //had to use startsWith bc \n on the end of the file
-        return true
-    }else{
-        return false
-    }}catch (e){
+        let response = await fetch(gatewayURL + "/ipfs/QmT78zSuBmuS4z925WZfrqQ1qHaJ56DQaTfyMUF7F8ff5o")
+        if((await response.text()).startsWith("hello world")){ //had to use startsWith bc \n on the end of the file
+            return true
+        }else{
+            return false
+        }
+    }catch (e){
         return false
     }
 }
