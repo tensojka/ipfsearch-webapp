@@ -41,7 +41,7 @@ async function getIpfsGatewayUrlPrefix() : Promise<string>{
     }
     if(await checkIfIpfsGateway("http://localhost:8080")){
         ipfsGatewayURL = "http://localhost:8080"
-    }else if(await checkIfIpfsGateway("http://"+window.location.host)){
+    }else if(await checkIfIpfsGateway(window.location.protocol+"//"+window.location.host)){
         ipfsGatewayURL = window.location.protocol+"//"+window.location.host
     }else{
         document.write("Loading of the index requires access to the IPFS network. We have found no running IPFS daemon on localhost. Please install IPFS from <a href='http://ipfs.io/docs/install'>ipfs.io</a> and refresh this page.")
