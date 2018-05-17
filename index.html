@@ -24,6 +24,7 @@
             <p></p>Loaded <i>"{{indexName}}"</i>, compiled by <i>"{{indexAuthor}}"</i></p>
             <input type='text' placeholder="search" id="searchbox"></input><button type="submit" onclick="searchTriggered()">Start search</button>
         </span>
+        <p v-if="error">❌ {{error}}</p>
 
         <table v-if="resultsFound">
             <tr>
@@ -34,7 +35,7 @@
             </tr>
         </table>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.14/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.min.js"></script>
     <script src="view.js"></script>
     <br>
     <hr>
@@ -71,3 +72,4 @@
 
 
 <script src="bundle.js"></script>
+</body>
