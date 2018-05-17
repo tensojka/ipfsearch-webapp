@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "Webapp for indexedsearch-ipfs",
     "scripts": {
-        "build":"node_modules/typescript/bin/tsc -p tsconfig.json",
+        "build":"node_modules/typescript/bin/tsc -p tsconfig.json --watch",
         "server":"http-server --cors",
         "deploy":"bash ./deploy-to-ipfs.sh"
     },
