@@ -39,14 +39,22 @@ async function getIpfsGatewayUrlPrefix() : Promise<string>{
     if(ipfsGatewayURL !== undefined){
         return ipfsGatewayURL
     }
-    if(await checkIfIpfsGateway(window.location.protocol+"//"+window.location.host)){
-        ipfsGatewayURL = "http://localhost:8080"
+
+    if(window.location.protocol === "https:"){
+        if(await checkIfIpfsGateway("")){
+            ipfsGatewayURL = window.location.protocol+"//"+window.location.host
+        }else{
+            app.error = "ipfsearch is currently being served from a HTTPS host that is not an IPFS node. This prevents it from using a local IPFS gateway. The node operator should fix this and run an ipfs gateway."
+        }
     }else if(await checkIfIpfsGateway("http://localhost:8080")){
         ipfsGatewayURL = window.location.protocol+"//"+window.location.host
+    }else if(await checkIfIpfsGateway("http://"+window.location.host)){
+        ipfsGatewayURL = "http://"+window.location.host
     }else{
         app.error = "Loading of the index requires access to the IPFS network. We have found no running IPFS daemon on localhost. Please install IPFS from <a href='http://ipfs.io/docs/install'>ipfs.io</a> and refresh this page."
         throw new Error("Couldn't get a IPFS gateway.")
     }
+    
     return ipfsGatewayURL
 }
 
@@ -55,17 +63,10 @@ async function getIpfsGatewayUrlPrefix() : Promise<string>{
  * @param gatewayURL in format http://ipfsgateway.tld(:port)
  */
 async function checkIfIpfsGateway(gatewayURL : string) : Promise<boolean>{
-    try{
-        let response = await fetch(gatewayURL + "/ipfs/QmT78zSuBmuS4z925WZfrqQ1qHaJ56DQaTfyMUF7F8ff5o")
-        if((await response.text()).startsWith("hello world")){ //had to use startsWith bc \n on the end of the file
-            return true
-        }else{
-            return false
-        }
-    }catch (e){
-        console.error("typeerr")
-        return false
-    }finally{
+    let response = await fetch(gatewayURL + "/ipfs/QmT78zSuBmuS4z925WZfrqQ1qHaJ56DQaTfyMUF7F8ff5o")
+    if((await response.text()).startsWith("hello world")){ //had to use startsWith bc \n on the end of the file
+        return true
+    }else{
         return false
     }
 }
