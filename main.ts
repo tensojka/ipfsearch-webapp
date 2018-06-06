@@ -4,15 +4,31 @@ var meta : metaFormat
 var app : any
 let ipfsGatewayURL : string
 
+function onLoad(){
+    
+    let params = new URLSearchParams(location.search);
+    if(params.get("index")){
+        console.log(params.get("index"))
+        loadMeta(params.get("index")).then(function(){document.getElementById("app").style.visibility = ""})
+    }else{
+        document.getElementById("app").style.visibility = ""
+    }
+}
+
 async function loadMeta(metaURL : string){
     let response
     if(metaURL.startsWith("/ipfs/") || metaURL.startsWith("/ipns/")){
         response = await fetch((await getIpfsGatewayUrlPrefix()) + metaURL)
     }else{
-        response = await fetch(metaURL) //Isn't this LOVELY?
+        response = await fetch(metaURL)
     }
     const json = await response.text()
-    meta = JSON.parse(json)
+    try{
+        meta = JSON.parse(json)
+    }catch(e){
+        app.error = "Unable to find index at "+metaURL
+        return
+    }
     if(meta.invURLBase.startsWith("/ipfs/") || meta.invURLBase.startsWith("/ipns/")){
         meta.invURLBase = (await getIpfsGatewayUrlPrefix()) + meta.invURLBase
     }
@@ -47,7 +63,7 @@ async function getIpfsGatewayUrlPrefix() : Promise<string>{
             app.error = "ipfsearch is currently being served from a HTTPS host that is not an IPFS node. This prevents it from using a local IPFS gateway. The node operator should fix this and run an ipfs gateway."
         }
     }else if(await checkIfIpfsGateway("http://localhost:8080")){
-        ipfsGatewayURL = window.location.protocol+"//"+window.location.host
+        ipfsGatewayURL = "http://localhost:8080"
     }else if(await checkIfIpfsGateway("http://"+window.location.host)){
         ipfsGatewayURL = "http://"+window.location.host
     }else{
@@ -69,11 +85,6 @@ async function checkIfIpfsGateway(gatewayURL : string) : Promise<boolean>{
     }else{
         return false
     }
-}
-
-function loadMetaFromButton(){
-    let metainputbox = <HTMLInputElement>document.getElementById("meta")
-    loadMeta(metainputbox.value)
 }
 
 function searchTriggered(){

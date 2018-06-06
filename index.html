@@ -12,13 +12,16 @@
     
 </head>
 
-<body>
+<body onload="onLoad()">
     <h1>ipfsearch<sup>beta</sup></h1>
 
-    <div id="app">
+    <div id="app" style="visibility: hidden;">
         <div v-if="showmeta">
             <p>Start by entering a link to an index in the box below.</p>
-            <input type="text" size="50" id="meta" placeholder="starts with http://, /ipfs/ or /ipns/"></input><button onclick="loadMetaFromButton()">Load index metadata</button>
+            <form method="GET" action="">
+            <input type="text" name="index" size="50" id="meta" placeholder="starts with http://, /ipfs/ or /ipns/"></input>
+            <input type="submit" value="Load index metadata" />
+            </form>
         </div>
         <span v-else-if="showsearchbox">
             <p></p>Loaded <i>"{{indexName}}"</i>, compiled by <i>"{{indexAuthor}}"</i></p>
@@ -45,9 +48,9 @@
     <p>You can search through indexes that do not live on one server (are decentralized). <i>This is required on <a href="https://ipfs.io/">IPFS</a>, because there is no one server.</i> The searching and sorting is happening in your browser.</p>
 
     <h3>What indexes can I search through?</h3>
-    <p>The reference index (maintained by me) is <b>Wikipedia article abstracts</b>: <code>/ipns/wikipedia.ipfsearch.xyz</code> AKA <code>/ipns/Qmdy6hkJWgsx4RQatotn48x1j57M3thSMSoKQQG6BpGPsa</code>.</p>
+    <p>The reference index (maintained by me) is <b>Wikipedia article abstracts</b>: <code><a href="/?index=/ipns/wikipedia.ipfsearch.xyz">/ipns/wikipedia.ipfsearch.xyz</a></code> AKA <code><a href="/?index=/ipns/Qmdy6hkJWgsx4RQatotn48x1j57M3thSMSoKQQG6BpGPsa">/ipns/Qmdy6hkJWgsx4RQatotn48x1j57M3thSMSoKQQG6BpGPsa</a></code>.</p>
     <p>If you want to create your own index, the instructions on how to do it are <a href="https://github.com/tensojka/ipfsearch-index/">here</a>.</p>
-    <p>One public index I've come across is the <b>The Pirate Bay Dump</b>, you can find it here: <code>/ipns/QmWK2jjuFaHds5CEA9AQsGjGUmAyxUMXdzdiz2cK8TokL4</code>. Note that I have no control over the index. The author writes more about it on <a href="https://www.reddit.com/r/Piracy/comments/8i7fvi/i_have_put_the_tpb_dump_on_ipfsearch_a/">reddit</a>.</p>
+    <p>One public index I've come across is the <b>The Pirate Bay Dump</b>, you can find it here: <code><a href="/?index=/ipns/QmWK2jjuFaHds5CEA9AQsGjGUmAyxUMXdzdiz2cK8TokL4">/ipns/QmWK2jjuFaHds5CEA9AQsGjGUmAyxUMXdzdiz2cK8TokL4</a></code>. Note that I have no control over the index. The author writes more about it on <a href="https://www.reddit.com/r/Piracy/comments/8i7fvi/i_have_put_the_tpb_dump_on_ipfsearch_a/">reddit</a>.</p>
 
     <h3>What advantages does it have over searching on the web?</h3>
     <p>Since there is no one server, there is also no one server that could be taken down. <b>It is impossible to take down an index after it is uploaded to IPFS.</b></p>
