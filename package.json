@@ -3,9 +3,9 @@
     "version": "1.0.0",
     "description": "Webapp for indexedsearch-ipfs",
     "scripts": {
-        "build":"node_modules/typescript/bin/tsc -p tsconfig.json --watch",
-        "server":"http-server --cors",
-        "deploy":"bash ./deploy-to-ipfs.sh"
+        "build": "node_modules/typescript/bin/tsc -p tsconfig.json --watch",
+        "server": "http-server --cors",
+        "deploy": "bash ./deploy-to-ipfs.sh"
     },
     "bugs": {
         "email": "ondrej.sojka+npm@gmail.com"
@@ -17,7 +17,7 @@
     "license": "AGPL-3.0+",
     "dependencies": {},
     "devDependencies": {
-        "typescript": "^2.7.2",
-        "@types/node": "^9.4.6"
+        "@types/node": "^9.6.24",
+        "typescript": "^3.0.1"
     }
 }
