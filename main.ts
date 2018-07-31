@@ -98,18 +98,13 @@ function searchTriggered(){
 }
 
 function searchFor(query : string){
-    var tStart = performance.now();
     let runningFetches : Array<Promise<void>>= []
     let tokenizedquery = tokenizeAndFilter(query)
     tokenizedquery.forEach((token) => {
         runningFetches.push(invinxFetcher.fetchShard(invinxFetcher.getIndexFor(token)))
     })
     Promise.all(runningFetches).then(() => {
-        var tFetchEnd = performance.now();
-        console.log("Fetching new shards for this query took " + Math.round(tFetchEnd - tStart) + " ms.")
         let candidates = getAllCandidates(tokenizedquery, invinxFetcher.combinedInvIndex)
-        var tCandidatesGenerated = performance.now();
-        console.log("Candidate generation took " + Math.round(tCandidatesGenerated - tFetchEnd) + " ms.")
         console.log("candidates prefilter: "+candidates.size)
         console.debug(candidates)
         candidates = filterCandidates(candidates, tokenizedquery.length)
@@ -139,8 +134,6 @@ function searchFor(query : string){
         for (let i in resultIds) {
             runningDocumentFetches.push(getDocumentForId(resultIds[i])) ///ooooh order gets messed up? maybeee?
         }
-        let tDocFetchStart = performance.now()
-        console.log("Result generation (&misc) took " + Math.round(tDocFetchStart - tCandidatesGenerated) + " ms.")
         Promise.all(runningDocumentFetches).then((results : Array<Object>) => {
             let tDocFetchEnd = performance.now()
             console.log("Index fetching and parsing and final result generation took " + Math.round(tDocFetchEnd - tDocFetchStart) + " ms.")
