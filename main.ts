@@ -3,6 +3,7 @@ var invinxFetcher = new InvertedIndexFetcher()
 var meta : metaFormat
 var app : any
 let ipfsGatewayURL : string
+const NUMRESULTS = Infinity //TODO REVERT TO 30
 
 function onLoad(){
     
@@ -111,35 +112,67 @@ function searchFor(query : string){
         console.log("candidates postfilter: "+candidates.size)
         let resultIds : Array<string>
         resultIds = []
+        /**
+         * Have we already found the most relevant candidate (=matches all tokens in query)?
+         */
+        let foundIdealCandidate : boolean
         for(let key of candidates.keys()){
+            if(key == "96e3a97ea9e53d2f2a127b30412320e91bf15201"){
+                console.warn("FOUND HIM!")
+                console.warn(candidates.get("96e3a97ea9e53d2f2a127b30412320e91bf15201"))
+            }
+            if(candidates.get(key) == tokenizedquery.length){
+                foundIdealCandidate = true
+            }
             resultIds.push(key)
         }
         console.debug(candidates)
-        console.debug(resultIds)
-        resultIds = resultIds.sort((a,b) => {
-            let ascore = candidates.get(a)
-            let bscore = candidates.get(b)
-            if(ascore > bscore){
-                return -1
-            }else if(ascore > bscore){
-                return 1
-            }else{
-                return 0
-            }
-        })
-        console.debug(resultIds)
-        resultIds = resultIds.slice(0, 30)
-        let runningDocumentFetches : Array<Promise<Object>>
-        runningDocumentFetches = []
-        for (let i in resultIds) {
-            runningDocumentFetches.push(getDocumentForId(resultIds[i])) ///ooooh order gets messed up? maybeee?
+        if(foundIdealCandidate){
+            console.info("Found an ideal candidate in prefetch sorting&filtering. Filtering out all non-ideal candidates...")
+            resultIds = resultIds.filter((resultId) => {
+                if(candidates.get(resultId) != tokenizedquery.length){
+                    return false
+                }else{
+                    return true
+                }
+            })
+        }else{ //sort them by relevance
+            console.debug(resultIds)
+            resultIds = resultIds.sort((a,b) => {
+                let ascore = candidates.get(a)
+                let bscore = candidates.get(b)
+                if(ascore > bscore){
+                    return -1
+                }else if(ascore > bscore){
+                    return 1
+                }else{
+                    return 0
+                }
+            })
         }
-        Promise.all(runningDocumentFetches).then((results : Array<Object>) => {
-            let tDocFetchEnd = performance.now()
-            console.log("Index fetching and parsing and final result generation took " + Math.round(tDocFetchEnd - tDocFetchStart) + " ms.")
-            app.resultsFound = true
+        console.debug("resultIds after prefetch sorting & filtering: ")
+        console.debug(resultIds)
+        resultIds = resultIds.slice(0, NUMRESULTS)
+        fetchAllDocumentsById(resultIds).then((results) => {
+            //TODO implement custom views for indices and pass the unsorted objects to them for sorting.
             app.results = results
+            app.resultsFound = true
         })
+    })
+}
+
+/**
+ * @param ids array of document ids to fetch
+ * @returns An array of fetched documents in the same order as ids.
+ */
+async function fetchAllDocumentsById(ids : string[]) : Promise<Array<Object>> {
+    let runningDocumentFetches : Array<Promise<Object>>
+    runningDocumentFetches = []
+    for (let id in ids) {
+        runningDocumentFetches.push(getDocumentForId(ids[id])) ///ooooh order gets messed up? maybeee?
+    }
+    return Promise.all(runningDocumentFetches).then((results : Array<Object>) => {
+        return results
     })
 }
 

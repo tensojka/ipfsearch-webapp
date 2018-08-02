@@ -20,6 +20,7 @@ function tokenizeAndFilter(name : string) : string[]{
         }
     })
     tokens.forEach((value,index,array) => {array[index] = value.toLowerCase()})
+    tokens.forEach((value,index,array) => {array[index] = stemmer(value)})
     return tokens
 }
 
