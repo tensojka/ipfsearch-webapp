@@ -1,0 +1,17 @@
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.min.js"></script>
+</head>
+<body onload="updateSize()">
+    <div id="app">
+        <table v-if="resultsFound">
+            <tr>
+                <th v-for="(value,key) in results[0]">{{key}}</th>
+            </tr>
+            <tr v-for="result in results">
+                <td v-for="(value) in result">{{value}}</td>
+            </tr>
+        </table>
+        <p v-if="!resultsFound">Results will appear here.</p>
+    </div>
+    <script src="main.js"></script>
+</body>

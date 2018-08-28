@@ -25,7 +25,6 @@ function tokenizeAndFilter(name : string) : string[]{
 }
 
 /**
- * 
  * @param url location of the index of documents
  */
 async function loadIndexFromURL(url : string) : Promise<Map<string,Object>>{
@@ -36,7 +35,6 @@ async function loadIndexFromURL(url : string) : Promise<Map<string,Object>>{
     }else{
         throw new Error(response.statusText);
     }
-    console.debug("parsing index from "+url)
     let parsedResponse : Object[] = JSON.parse(responsetext)
     let parsedIndex : Map<string,Object>
     parsedIndex = new Map()
@@ -96,7 +94,6 @@ function loadInvertedIndexFromURL(url : string) : Promise<Map<string,Array<strin
 
 async function getDocumentForId(docid : string) : Promise<Object>{
     docid = docid.replace("%2C",",")
-    console.debug("getDocumentForId("+docid+")")
     await inxFetcher.fetchShard(inxFetcher.getIndexFor(docid))
     if(inxFetcher.combinedIndex.get(docid) === undefined){
         console.error("No document found for docid "+docid)

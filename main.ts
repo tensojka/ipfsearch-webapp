@@ -3,20 +3,18 @@ var invinxFetcher = new InvertedIndexFetcher()
 var meta : metaFormat
 var app : any
 let ipfsGatewayURL : string
-const NUMRESULTS = Infinity //TODO REVERT TO 30
+const NUMRESULTS = 30
 
 function onLoad(){
-    
     let params = new URLSearchParams(location.search);
     if(params.get("index")){
-        console.log(params.get("index"))
         loadMeta(params.get("index")).then(function(){document.getElementById("app").style.visibility = ""})
     }else{
         document.getElementById("app").style.visibility = ""
     }
 }
 
-async function loadMeta(metaURL : string){
+async function loadMeta(metaURL : string) : Promise<void>{
     let response
     if(metaURL.startsWith("/ipfs/") || metaURL.startsWith("/ipns/")){
         response = await fetch((await getIpfsGatewayUrlPrefix()) + metaURL)
@@ -37,11 +35,21 @@ async function loadMeta(metaURL : string){
         meta.inxURLBase = (await getIpfsGatewayUrlPrefix()) + meta.inxURLBase
     }
 
-    console.log("meta successfully fetched.")
+    console.log("meta fetched")
     app.showmeta = false
     app.showsearchbox = true
     app.indexAuthor = meta.author
     app.indexName = meta.name
+    if(meta.resultPage == undefined){
+        //app.resultPage = "basicresultpage/" //default
+        app.resultPage = "/basicresultpage"
+    }else{
+        if(meta.resultPage.startsWith("/ipfs/") || meta.resultPage.startsWith("/ipns/")){
+            app.resultPage = (await getIpfsGatewayUrlPrefix()) + meta.resultPage
+        }else{
+            app.resultPage = meta.resultPage
+        }
+    }
 }
 
 /** 
@@ -117,10 +125,6 @@ function searchFor(query : string){
          */
         let foundIdealCandidate : boolean
         for(let key of candidates.keys()){
-            if(key == "96e3a97ea9e53d2f2a127b30412320e91bf15201"){
-                console.warn("FOUND HIM!")
-                console.warn(candidates.get("96e3a97ea9e53d2f2a127b30412320e91bf15201"))
-            }
             if(candidates.get(key) == tokenizedquery.length){
                 foundIdealCandidate = true
             }
@@ -154,11 +158,17 @@ function searchFor(query : string){
         console.debug(resultIds)
         resultIds = resultIds.slice(0, NUMRESULTS)
         fetchAllDocumentsById(resultIds).then((results) => {
-            //TODO implement custom views for indices and pass the unsorted objects to them for sorting.
-            app.results = results
-            app.resultsFound = true
+            passResultToResultpage(results)
         })
     })
+}
+
+function passResultToResultpage(results : Object[]){
+    let resultPageIframe = <HTMLIFrameElement> document.getElementById("resultPage")
+    resultPageIframe.contentWindow.postMessage({
+        type: "results",
+        results: JSON.stringify(results)
+    }, '*');
 }
 
 /**
@@ -233,4 +243,5 @@ interface metaFormat {
     inxURLBase:string
     inxsplits:string[]
     invsplits:string[]
+    resultPage?:string
 }
