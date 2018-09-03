@@ -2,23 +2,9 @@
  * Tokenizes string into an array of tokens and filters out stopwords.
  * @param name string to get tokenized
  */
-function tokenizeAndFilter(name : string) : string[]{
+function tokenize(name : string) : string[]{
     let tokens : string[] = name.split(' ').join(',').split('.').join(',').split('(').join(',').split(')').join(',').split('-').join(',').split('_').join(',').split(',') // super super awful and nasty, but gets the job done.
-    tokens = tokens.filter(function (token){
-        if(token){
-            if(token.toLowerCase() === "the" || token.toLowerCase() === "of" || token.toLowerCase() === "and" || token === "&" || token === "+"){
-                return false
-            }else if(token.length <= 1){
-                return false
-            }else if(token.startsWith("&") && token.indexOf(';') > -1){
-                return false
-            }else{
-                return true
-            }
-        }else{
-            return false
-        }
-    })
+
     tokens.forEach((value,index,array) => {array[index] = value.toLowerCase()})
     tokens.forEach((value,index,array) => {array[index] = stemmer(value)})
     return tokens

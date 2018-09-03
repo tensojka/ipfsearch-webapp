@@ -108,7 +108,7 @@ function searchTriggered(){
 
 function searchFor(query : string){
     let runningFetches : Array<Promise<void>>= []
-    let tokenizedquery = tokenizeAndFilter(query)
+    let tokenizedquery = tokenize(query)
     tokenizedquery.forEach((token) => {
         runningFetches.push(invinxFetcher.fetchShard(invinxFetcher.getIndexFor(token)))
     })
