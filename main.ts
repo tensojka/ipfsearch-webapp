@@ -40,6 +40,8 @@ async function loadMeta(metaURL : string) : Promise<void>{
     app.showsearchbox = true
     app.indexAuthor = meta.author
     app.indexName = meta.name
+    let ts = new Date(meta.created)
+    app.indexTimestamp = ts.getDate().toString()+"/"+ts.getMonth().toString()+"/"+ts.getFullYear().toString()
     if(meta.resultPage == undefined){
         //app.resultPage = "basicresultpage/" //default
         app.resultPage = "/basicresultpage"

@@ -10,7 +10,7 @@
             overflow-wrap: break-word;
         }
     </style>
-    <title>ipfsearch - decentralized resilient search engine</title>
+    <title>ipfsearch - decentralized resilient search</title>
 </head>
 
 <body onload="onLoad()">
@@ -25,7 +25,7 @@
             </form>
         </div>
         <span v-else-if="showsearchbox">
-            <p></p>Loaded <i>"{{indexName}}"</i>, compiled by <i>"{{indexAuthor}}"</i></p>
+            <p></p>Loaded <i>"{{indexName}}"</i>, compiled by <i>"{{indexAuthor}}"</i> on {{indexTimestamp}}</p>
             <input type='text' placeholder="search" id="searchbox" /><button type="submit" onclick="searchTriggered()">Start search</button>
         </span>
         <p v-if="error">❌ {{error}}</p>
@@ -40,9 +40,9 @@
             <p>You can search through indexes that do not live on one server (are decentralized). <i>This is required on <a href="https://ipfs.io/">IPFS</a>, because there is no one server.</i> The searching and sorting is happening in your browser. This means that all your activity is <b>anonymous</b> and no one can see what you search for.</p>
             
             <h3>What indexes can I search through?</h3>
-            <p>The reference index (maintained by me) is <b>Wikipedia article abstracts</b>: <code><a href="/?index=/ipns/wikipedia.ipfsearch.xyz">/ipns/wikipedia.ipfsearch.xyz</a></code> AKA <code><a href="/?index=/ipns/Qmdy6hkJWgsx4RQatotn48x1j57M3thSMSoKQQG6BpGPsa">/ipns/Qmdy6hkJWgsx4RQatotn48x1j57M3thSMSoKQQG6BpGPsa</a></code>.</p>
+            <p>The reference index (maintained by me) is <b>Wikipedia article abstracts</b>: <code><a href="?index=/ipns/wikipedia.ipfsearch.xyz">/ipns/wikipedia.ipfsearch.xyz</a></code> AKA <code><a href="?index=/ipns/Qmdy6hkJWgsx4RQatotn48x1j57M3thSMSoKQQG6BpGPsa">/ipns/Qmdy6hkJWgsx4RQatotn48x1j57M3thSMSoKQQG6BpGPsa</a></code>.</p>
             <p>If you want to create your own index, the instructions on how to do it and a library to help you are <a href="https://github.com/tensojka/ipfsearch-index/">here</a>.</p>
-            <p>One index I've come across is the <b>The Pirate Bay Dump</b>, you can find it here: <code><a href="/?index=/ipns/12D3KooWPqVNa1w8ywjDjNo7o8SpvC6LHBBU96hMMcXpKteg2zMx">/ipns/12D3KooWPqVNa1w8ywjDjNo7o8SpvC6LHBBU96hMMcXpKteg2zMx</a></code>. Note that I have no control over the index. The author writes more about it on <a href="https://www.reddit.com/r/Piracy/comments/8i7fvi/i_have_put_the_tpb_dump_on_ipfsearch_a/">reddit</a>.</p>
+            <p>One index I've come across is the <b>The Pirate Bay Dump</b>, you can find it here: <code><a href="?index=/ipns/12D3KooWPqVNa1w8ywjDjNo7o8SpvC6LHBBU96hMMcXpKteg2zMx">/ipns/12D3KooWPqVNa1w8ywjDjNo7o8SpvC6LHBBU96hMMcXpKteg2zMx</a></code>. Note that I have no control over the index. The author writes more about it on <a href="https://www.reddit.com/r/Piracy/comments/8i7fvi/i_have_put_the_tpb_dump_on_ipfsearch_a/">reddit</a>.</p>
             
             <h3>What advantages does it have over searching on the web?</h3>
             <p>Since there is no one server, there is also no one server that could be taken down. <b>It is impossible to take down an index after it is uploaded to IPFS,</b> just like it's impossible to take down a torrent.</p>
@@ -59,6 +59,7 @@
             
             <h3>How can I access this if ipfsearch.xyz is down?</h3>
             <p>Download IPFS from <a href="https://ipfs.io/docs/install/">the official website</a>, start the daemon on your computer and dial http://localhost:8080/ipns/ipfsearch.xyz in a browser.</p>
+            <p>If you're getting CORS errors, you must first edit your configuration: <code>$ ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["*"]'</code>.</p>
             
             <h2>Source and license</h2>
             <p>You can find the source code of this at <a href="https://github.com/tensojka/ipfsearch-webapp">Github</a>. Issues and PRs are welcome there.</p>
