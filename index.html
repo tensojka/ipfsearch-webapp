@@ -37,15 +37,16 @@
             <h2>About</h2>
             
             <h3>What does ipfsearch do?</h3>
-            <p>You can search through indexes that do not live on one server (are decentralized). <i>This is required on <a href="https://ipfs.io/">IPFS</a>, because there is no one server.</i> The searching and sorting is happening in your browser. This means that all your activity is <b>anonymous</b> and no one can see what you search for.</p>
+            <p>You search through indices that do not live on one server (are decentralized). The searching and sorting is happening in your browser. This means that all your activity is <b>anonymous</b> and no one can see what you search for -- your search terms never leave your browser.</p>
             
             <h3>What indexes can I search through?</h3>
             <p>The reference index (maintained by me) is <b>Wikipedia article abstracts</b>: <code><a href="?index=/ipns/wikipedia.ipfsearch.xyz">/ipns/wikipedia.ipfsearch.xyz</a></code> AKA <code><a href="?index=/ipns/Qmdy6hkJWgsx4RQatotn48x1j57M3thSMSoKQQG6BpGPsa">/ipns/Qmdy6hkJWgsx4RQatotn48x1j57M3thSMSoKQQG6BpGPsa</a></code>.</p>
             <p>If you want to create your own index, the instructions on how to do it and a library to help you are <a href="https://github.com/tensojka/ipfsearch-index/">here</a>.</p>
-            <p>One index I've come across is the <b>The Pirate Bay Dump</b>, you can find it here: <code><a href="?index=/ipns/12D3KooWPqVNa1w8ywjDjNo7o8SpvC6LHBBU96hMMcXpKteg2zMx">/ipns/12D3KooWPqVNa1w8ywjDjNo7o8SpvC6LHBBU96hMMcXpKteg2zMx</a></code>. Note that I have no control over the index. The author writes more about it on <a href="https://www.reddit.com/r/Piracy/comments/8i7fvi/i_have_put_the_tpb_dump_on_ipfsearch_a/">reddit</a>.</p>
+            <p>One index I've come across is the <b>The Pirate Bay Dump</b>, you can find it here: <code><a href="?index=/ipns/12D3KooWPqVNa1w8ywjDjNo7o8SpvC6LHBBU96hMMcXpKteg2zMx">/ipns/12D3KooWPqVNa1w8ywjDjNo7o8SpvC6LHBBU96hMMcXpKteg2zMx</a></code>. The author writes more about it on <a href="https://www.reddit.com/r/Piracy/comments/8i7fvi/i_have_put_the_tpb_dump_on_ipfsearch_a/">reddit</a>.</p>
             
-            <h3>What advantages does it have over searching on the web?</h3>
-            <p>Since there is no one server, there is also no one server that could be taken down. <b>It is impossible to take down an index after it is uploaded to IPFS,</b> just like it's impossible to take down a torrent.</p>
+            <h3>What advantages does it have over a centralized search engine?</h3>
+            <p>Since there is no one server, there is also no one server that could be taken down. <b>It is impossible to take down an index after it is uploaded to <a href="https://ipfs.io/">IPFS</a>, just like it's impossible to take down a torrent, for example.</p>
+            <p>It also has huge privacy advantages: you search term never leaves your device.</p>
             
             <h3>How does it work?</h3>
             <p>Traditionally, when you search for something on the web, you send your query to a server. The server then (basically) takes your query, looks up the relevant documents in its index, ranks the results and sends the results back to you. This is how search works on Wikipedia, DuckDuckGo or Google.</p>
