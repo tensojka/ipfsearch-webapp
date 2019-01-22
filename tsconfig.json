@@ -2,7 +2,7 @@
     "compilerOptions": {
         "target": "esnext",
         "sourceMap": false,
-        "outFile": "bundle.js"
+        "outFile": "../nextgen/website/bundle.js"
     },
     "include": [
         "./*"

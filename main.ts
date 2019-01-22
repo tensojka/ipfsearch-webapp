@@ -109,10 +109,19 @@ function searchTriggered(){
 }
 
 function searchFor(query : string){
+    passProgressToResultpage(0)
     let runningFetches : Array<Promise<void>>= []
     let tokenizedquery = tokenize(query)
     tokenizedquery.forEach((token) => {
         runningFetches.push(invinxFetcher.fetchShard(invinxFetcher.getIndexFor(token)))
+    })
+    let invToFetch = runningFetches.length
+    let invFetched = 0
+    runningFetches.forEach((fetch) => {
+        fetch.then(() => {
+            invFetched++
+            passProgressToResultpage(0.5 * invFetched/invToFetch)
+        })
     })
     Promise.all(runningFetches).then(() => {
         let candidates = getAllCandidates(tokenizedquery, invinxFetcher.combinedInvIndex)
@@ -120,6 +129,7 @@ function searchFor(query : string){
         console.debug(candidates)
         candidates = filterCandidates(candidates, tokenizedquery.length)
         console.log("candidates postfilter: "+candidates.size)
+        passProgressToResultpage(0.6)
         let resultIds : Array<string>
         resultIds = []
         /**
@@ -143,7 +153,6 @@ function searchFor(query : string){
                 }
             })
         }else{ //sort them by relevance
-            console.debug(resultIds)
             resultIds = resultIds.sort((a,b) => {
                 let ascore = candidates.get(a)
                 let bscore = candidates.get(b)
@@ -158,9 +167,17 @@ function searchFor(query : string){
         }
         console.debug("resultIds after prefetch sorting & filtering: ")
         console.debug(resultIds)
-        resultIds = resultIds.slice(0, NUMRESULTS)
-        fetchAllDocumentsById(resultIds).then((results) => {
+        let resultIdsToFetch = resultIds.slice(0, NUMRESULTS)
+        passProgressToResultpage(0.7)
+        fetchAllDocumentsById(resultIdsToFetch).then((results) => {
+            passProgressToResultpage(0.95)
             passResultToResultpage(results)
+            //fetch all results, not just the first NUMRESULTS
+            resultIds = resultIds.slice(0,1000)
+            fetchAllDocumentsById(resultIds).then((results) => {
+                passProgressToResultpage(1)
+                passResultToResultpage(results)
+            })
         })
     })
 }
@@ -170,6 +187,22 @@ function passResultToResultpage(results : Object[]){
     resultPageIframe.contentWindow.postMessage({
         type: "results",
         results: JSON.stringify(results)
+    }, '*');
+}
+
+/**
+ * 
+ * @param progress Number between 0 and 1 representing fractional progress made in search.
+ */
+function passProgressToResultpage(progress : number){
+    if(progress > 1){
+        throw Error("progress passed to resultpage must be < 1")
+    }
+    console.log("Progress: "+(progress*100).toString())
+    let resultPageIframe = <HTMLIFrameElement> document.getElementById("resultPage")
+    resultPageIframe.contentWindow.postMessage({
+        type: "progress",
+        progress: progress
     }, '*');
 }
 
