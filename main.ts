@@ -43,8 +43,7 @@ async function loadMeta(metaURL : string) : Promise<void>{
     let ts = new Date(meta.created)
     app.indexTimestamp = ts.getDate().toString()+"/"+(ts.getMonth()+1).toString()+"/"+ts.getFullYear().toString()
     if(meta.resultPage == undefined){
-        //app.resultPage = "basicresultpage/" //default
-        app.resultPage = "/basicresultpage"
+        app.resultPage = "basicresultpage"
     }else{
         if(meta.resultPage.startsWith("/ipfs/") || meta.resultPage.startsWith("/ipns/")){
             app.resultPage = (await getIpfsGatewayUrlPrefix()) + meta.resultPage
